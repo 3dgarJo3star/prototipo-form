@@ -1,0 +1,142 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
+function UpdateProductionForm() {
+  const [key, setKey] = useState(''); // El valor de la orden que quieres actualizar
+  const [cantidadPrimeras, setCantidadPrimeras] = useState('');
+  const [cantidadSegundas, setCantidadSegundas] = useState('');
+  const [cantidadPrimSeg, setCantidadPrimSeg] = useState('');
+  const [cantidadTerceras, setCantidadTerceras] = useState('');
+  const [cantidadCanceladas, setCantidadCanceladas] = useState('');
+  const [totalPrimSegTerCan, setTotalPrimSegTerCan] = useState('');
+  const [sumaIrregulares, setSumaIrregulares] = useState('');
+  const [showModal, setShowModal] = useState(false); 
+  const navigate = useNavigate();
+
+  const handleUpdate = async (e) => {
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+  
+    try {
+      const response = await axios.put('http://localhost:3001/api/UpdateProduction', {
+        key,
+        CantidadPrimeras: cantidadPrimeras,
+        CantidadSegundas: cantidadSegundas,
+        CantidadPrimSeg: cantidadPrimSeg,
+        CantidadTerceras: cantidadTerceras,
+        CantidadCanceladas: cantidadCanceladas,
+        TotalPrimSegTerCan: totalPrimSegTerCan,
+        SumaIrregulares: sumaIrregulares,
+      });
+      setKey('')
+      setCantidadPrimeras('');
+      setCantidadSegundas('');
+      setCantidadPrimSeg('');
+      setCantidadTerceras('');
+      setCantidadCanceladas('');
+      setTotalPrimSegTerCan('');
+      setSumaIrregulares('');
+      setShowModal(true); 
+      console.log('Respuesta del servidor:', response.data);
+      // Aquí puedes manejar la respuesta como necesites, tal vez mostrar un mensaje de éxito
+    } catch (error) {
+      console.error('Error al actualizar la producción:', error);
+      // Maneja el error como necesites, tal vez mostrar un mensaje de error
+    }
+  };
+
+  return (
+    <>
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-md w-96 space-y-4">
+            <h2 className="text-lg font-semibold text-gray-700">¡Información enviada!</h2>
+            <p className="text-gray-600">Los datos han sido enviados con éxito.</p>
+            <div className="flex justify-end space-x-4">
+                <button
+                    onClick={() => navigate('/InsertIrregularInfoPage')} // Redirige al Dashboard
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
+                    Actualizar Irregulares
+                </button>
+                <button
+                    onClick={() => navigate('/ShowOrderInfo')} // Redirige a la página de inicio
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
+                    Ver las tablas
+                </button>
+            </div>
+        </div>
+    </div>
+      )}
+      <form
+      onSubmit={handleUpdate}
+      className="bg-white p-6 border border-gray-300 rounded-md shadow-md space-y-4">
+      <h2 className="text-lg font-semibold text-gray-600 mb-4">Actualizar Producción</h2>
+      
+      <input
+          type="text"
+          placeholder="Orden"
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Cantidad Primeras"
+          value={cantidadPrimeras}
+          onChange={(e) => setCantidadPrimeras(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Cantidad Segundas"
+          value={cantidadSegundas}
+          onChange={(e) => setCantidadSegundas(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Cantidad PrimSeg"
+          value={cantidadPrimSeg}
+          onChange={(e) => setCantidadPrimSeg(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Cantidad Terceras"
+          value={cantidadTerceras}
+          onChange={(e) => setCantidadTerceras(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Cantidad Canceladas"
+          value={cantidadCanceladas}
+          onChange={(e) => setCantidadCanceladas(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Total PrimSegTerCan"
+          value={totalPrimSegTerCan}
+          onChange={(e) => setTotalPrimSegTerCan(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      <input
+          type="number"
+          placeholder="Suma Irregulares"
+          value={sumaIrregulares}
+          onChange={(e) => setSumaIrregulares(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      
+      <button
+          type="submit"
+          className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200">
+          Actualizar Producción
+      </button>
+  </form>
+    </>
+  );
+}
+
+export default UpdateProductionForm; 
